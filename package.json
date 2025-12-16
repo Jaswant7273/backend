@@ -1,0 +1,41 @@
+{
+  "_COMMENT": "PROJECT METADATA",
+  "name": "ts-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "_COMMENT_": "NPM SCRIPTS FOR DEVELOPMENT AND PRODUCTION",
+  "scripts": {
+    "_COMMENT_DEV": "RUN DEVELOPMENT SERVER WITH AUTO RESTART LOAD ENV WITHOUT DOTENV PACKAGE",
+    "dev": "tsx watch --env-file=.env  src/server.ts",
+    "_COMMENT_BUILD": "COMPILE TYPESCRIPT TO JAVASCRIPT",
+    "build": "tsc -p tsconfig.json",
+    "_COMMENT_START": "RUN BUILT SERVER FROM DIST FOLDER",
+    "start": "node --env-file=.env dist/server.js",
+    "_COMMENT_LINT": "CHECK CODE QUALITY USING ESLINT",
+    "lint": "eslint . --ext .ts"
+  },
+  "_COMMENT_DEPENDENCIES": "LIBRARIES REQUIRED AT RUNTIME",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.0",
+    "nodemailer": "^7.0.11",
+    "zod": "^4.1.13"
+  },
+  "_COMMENT_DEVDEPENDENCIES": "TOOLS FOR DEVELOPMENT ONLY (NOT INCLUDED IN PRODUCTION)",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.1",
+    "@types/nodemailer": "^7.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,110 @@
+// {
+//   "compilerOptions": {
+//     // File Layout
+//     "rootDir": "./src",
+//     "outDir": "./dist",
+
+//     // Environment Settings
+//     "module": "nodenext",
+//     "target": "esnext",
+
+//     // For nodejs:
+//     "lib": ["esnext"],
+//     "types": ["node"],
+
+//     // Other Outputs
+//     "sourceMap": true,
+//     "declaration": true,
+//     "declarationMap": true,
+
+//     // Stricter Typechecking Options
+//     "noUncheckedIndexedAccess": true,
+//     "exactOptionalPropertyTypes": true,
+
+
+//     // Recommended Options
+//     "strict": true,
+//     "jsx": "react-jsx",
+//     "verbatimModuleSyntax": true,
+//     "isolatedModules": true,
+//     "noUncheckedSideEffectImports": true,
+//     "moduleDetection": "force",
+//     "skipLibCheck": true,
+//   }
+// }
+
+
+// ------------------------------------------------------------------------------------------------------------------------------
+//                                               TYPESCRIPT COMPILER CONFIGURATION
+//                                   THIS FILE DEFINES HOW TYPESCRIPT COMPILES YOUR PROJECT
+// ------------------------------------------------------------------------------------------------------------------------------
+
+{
+  "compilerOptions": {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                                    FILE & DIRECTORY STRUCTURE
+    //  rootDir:       Where your TypeScript source files live
+    //  outDir:        Where your compiled JavaScript files will be generated
+    // --------------------------------------------------------------------------------------------------------------------------
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                                    ENVIRONMENT SETTINGS
+    //  module:        Sets the module system (NodeNext for Node.js with ES modules)
+    //  target:        JavaScript version to compile down to (ESNext = latest)
+    // --------------------------------------------------------------------------------------------------------------------------
+    "module": "nodenext",
+    "target": "esnext",
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                                     NODE.JS ENVIRONMENT
+    //  lib:           Includes built-in JavaScript APIs (ESNext)
+    //  types:         Loads Node.js type definitions for global objects
+    // --------------------------------------------------------------------------------------------------------------------------
+    "lib": ["esnext"],
+    "types": ["node"],
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                                 OUTPUT & BUILD OPTIONS
+    //  sourceMap:         Helps debugging (maps JS code back to TS)
+    //  declaration:       Generates .d.ts files for libraries
+    //  declarationMap:    Source maps for declaration files
+    // --------------------------------------------------------------------------------------------------------------------------
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                             STRICTER TYPECHECKING (BEST PRACTICES)
+    //  noUncheckedIndexedAccess:       Adds undefined to array index results (safer)
+    //  exactOptionalPropertyTypes:     Optional properties must be explicitly typed
+    // --------------------------------------------------------------------------------------------------------------------------
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    //                                                      RECOMMENDED OPTIONS
+    //  strict:                     Enables all strict TypeScript rules
+    //  jsx:                        Enables React JSX transform if frontend is included
+    //  verbatimModuleSyntax:       Keeps ES import/export exactly as written
+    //  isolatedModules:            Ensures every file can be compiled independently
+    //  noUncheckedSideEffectImports: Warn on imports that do nothing
+    //  moduleDetection:            Forces module interpretation
+    //  skipLibCheck:               Speeds up builds by skipping type checks in libs
+    // --------------------------------------------------------------------------------------------------------------------------
+    "strict": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true
+  }
+}
