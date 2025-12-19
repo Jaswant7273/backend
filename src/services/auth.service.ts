@@ -3,6 +3,7 @@ import { config } from "../config/index.js";
 import { User } from "../models/User.js";
 import OTPService from "../utils/otpService.js";
 import { Token } from "../utils/token.js";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 export class AuthService {
   static async register({
@@ -51,19 +52,47 @@ export class AuthService {
     };
   }
 
-  static async login({ email, password }: { email: string; password: string }) {
+  static async login({
+    email,
+    password,
+    userAgent,
+    ip,
+    device_id,
+  }: {
+    email: string;
+    password: string;
+    userAgent: any;
+    ip: any;
+    device_id: string;
+  }) {
+    if (!email)
+      throw { status: 400, message: "Email Required", field: "email" };
+    if (!device_id)
+      throw { status: 400, message: "Device ID Required", field: "device_id" };
+
     const user = await User.findOne({ email });
     if (!user) throw { status: 401, message: "Invalid credentials" };
-
+    if (!user.verified) {
+      throw { status: 403, message: "Please verify your account first" };
+    }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw { status: 401, message: "Invalid credentials" };
     const userId = user._id.toString();
     const accessToken = Token.signAccess(userId);
-    const refreshToken = Token.signRefresh(userId);
-
+    const refreshToken = Token.generateRefresh();
+    const { expiresAt, refreshTokenHash } = Token.hashRefresh(refreshToken);
+    await RefreshToken.create({
+      user: user._id,
+      tokenHash: refreshTokenHash,
+      expiresAt,
+      ip: ip,
+      userAgent,
+      deviceId: device_id,
+    });
     return {
       accessToken,
       refreshToken,
+      refresh_expires_at: expiresAt,
       user: { id: user._id, name: user.name, email: user.email },
     };
   }
@@ -92,23 +121,60 @@ export class AuthService {
 
   static async refreshToken(refresh_token: string) {
     try {
-      // Verify the refresh token
-      const payload: any = Token.verify(refresh_token, config.jwtRefreshSecret);
+      if (!refresh_token) {
+        throw { status: 401, message: "Refresh token required" };
+      }
+
+      // 1️⃣ Hash incoming token
+      const { refreshTokenHash } = Token.hashRefresh(refresh_token);
+
+      // 2️⃣ Find stored refresh token
+      const storedToken = await RefreshToken.findOne({
+        tokenHash: refreshTokenHash,
+        revoked: false,
+        expiresAt: { $gt: new Date() },
+      });
+      if (!storedToken) {
+        // 🚨 Possible token reuse / revoked / expired
+        throw { status: 401, message: "Invalid refresh token" };
+      }
+      // 3️⃣ Rotate token (revoke old)
+      storedToken.revoked = true;
+      await storedToken.save();
+
+      // 4️⃣ Create new refresh token
+      const {
+        refreshToken,
+        refreshTokenHash: new_refresh_token_hash,
+        expiresAt,
+      } = Token.signRefresh();
+
+      await RefreshToken.create({
+        user: storedToken.user,
+        tokenHash: new_refresh_token_hash,
+        expiresAt,
+        ...(storedToken.deviceId && { deviceId: storedToken.deviceId }),
+        ...(storedToken.ip && { ip: storedToken.ip }),
+        ...(storedToken.userAgent && { userAgent: storedToken.userAgent }),
+      });
 
       // Generate new tokens
-      const access_token = Token.signAccess(payload?.id);
-      const new_refresh_token = Token.signRefresh(payload?.id);
+      const access_token = Token.signAccess(storedToken.user.toString());
 
-      // Optionally fetch the user info from DB
-      const user = await User.findById(payload?.id).select("-password");
+      //  fetch the user info from DB
+      const user = await User.findById(storedToken.user.toString()).select(
+        "-password"
+      );
 
       return {
         access_token,
-        refresh_token: new_refresh_token,
+        refresh_token: refreshToken,
+        refresh_expires_at: expiresAt,
         user,
       };
-    } catch (err) {
-      throw { status: 401, message: "Invalid refresh token" };
+    } catch (err: any) {
+      if (err?.status) throw err;
+      throw { status: 500, message: "Refresh token processing failed" };
     }
   }
 

@@ -10,6 +10,7 @@ type IConfig = {
   jwtExpiresIn: string | number | any;
   jwtRefreshSecret: string;
   jwtRefreshExpiresIn: string | number | any;
+  otpExpiresIn: string | number | any;
   smtp: {
     host: string | any;
     port: number;
@@ -35,7 +36,7 @@ export const config: IConfig = {
   // JWT SECRET KEY USED FOR SIGNING TOKENS
   // WARNING: NEVER USE THE DEFAULT IN PRODUCTION. ALWAYS SET A STRONG SECRET IN .env
   // ----------------------------------------------------------------------------------------------------------
-  jwtSecret: process.env.JWT_SECRET || "replace_this_in_prod",
+  jwtSecret: process.env.JWT_SECRET || "",
 
   // ----------------------------------------------------------------------------------------------------------
   // TOKEN EXPIRY TIME (EXAMPLES: "1h", "30m", "7d")
@@ -47,13 +48,19 @@ export const config: IConfig = {
   // JWT SECRET KEY USED FOR SIGNING TOKENS
   // WARNING: NEVER USE THE DEFAULT IN PRODUCTION. ALWAYS SET A STRONG SECRET IN .env
   // ----------------------------------------------------------------------------------------------------------
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || "replace_this_in_prod",
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || "",
 
   // ----------------------------------------------------------------------------------------------------------
   // TOKEN EXPIRY TIME (EXAMPLES: "1h", "30m", "7d")
   // Determines how long the user's login session remains valid
   // ----------------------------------------------------------------------------------------------------------
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
+
+  // ----------------------------------------------------------------------------------------------------------
+  // TOKEN EXPIRY TIME (EXAMPLES: "1h", "30m", "7d")
+  // Determines how long the user's login session remains valid
+  // ----------------------------------------------------------------------------------------------------------
+  otpExpiresIn: process.env.OTP_EXPIRES_IN || "10m",
 
   // SMTP for mail
   smtp: {

@@ -45,10 +45,21 @@ export class AuthController {
 
   static async login(req: Request, res: Response) {
     try {
-      const data = await AuthService.login(req.body);
-      return sendSuccess(res, data, "Login successful");
+      const data = await AuthService.login({
+        email: req.body.email,
+        password: req.body.password,
+        ip: req.ip,
+        userAgent: req.headers["user-agent"],
+        device_id: req.body.device_id,
+      });
+      return sendSuccess(res, data, "Login Successfull", 200);
     } catch (err: any) {
-      return sendError(res, err.message, err.status || 500);
+      return sendError(
+        res,
+        err.message,
+        err.status || 500,
+        err.field ? { [err.field]: err.message } : undefined
+      );
     }
   }
 
